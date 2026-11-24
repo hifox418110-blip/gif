@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#fafbf8">
+  <meta name="description" content="사진으로 GIF를 만들고 GIF의 크기, 재생 속도, 구간을 편집할 수 있는 프레임랩">
+  <title>프레임랩 | GIF 생성·편집 스튜디오</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M7.6 5v14M16.4 5v14M3.5 9.5h4M3.5 14.5h4M16.5 9.5h4M16.5 14.5h4"/></symbol>
+    <symbol id="i-stack" viewBox="0 0 24 24"><rect x="7" y="7" width="14" height="13" rx="2"/><path d="M16 4H5a2 2 0 0 0-2 2v9M10 16l3-3 2 2 2-2 2 2"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 8V6a2 2 0 0 1 2-2h4l2.5 3H19a2 2 0 0 1 2 2v2M3 9.5h16.5a1.5 1.5 0 0 1 1.4 2L18.6 18a2 2 0 0 1-1.9 1.4H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 4h13l3 3v13H4zM8 4v6h8V4M8 20v-7h8v7"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+  </svg>
+  <header class="appbar">
+    <div class="bar-inner">
+      <a class="brand" href="./index.html" aria-label="gif 편집기 홈"><span class="brandmark" aria-hidden="true"><i></i><i></i><i></i></span><span>gif 편집기</span></a>
+      <nav class="mode-tabs" aria-label="작업 모드">
+        <button type="button" id="tab-edit" aria-selected="true"><svg class="ico"><use href="#i-film"/></svg>GIF 편집</button>
+        <button type="button" id="tab-create" aria-selected="false"><svg class="ico"><use href="#i-stack"/></svg>GIF 생성</button>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div id="notice" role="status" aria-live="polite"></div>
+    <section id="landing">
+      <div class="hero">
+        <h1 id="hero-title">쓰기 쉬운 GIF 편집기</h1>
+        <p id="hero-subtitle">GIF 파일을 간편히 편집하기</p>
+      </div>
+      <div id="dropzone">
+        <div class="land-art" aria-hidden="true">
+          <div class="sheet sheet-a"><i></i></div>
+          <div class="sheet sheet-b"><i></i></div>
+          <div class="sheet sheet-c"><i></i><b></b></div>
+          <span class="spark spark-a">✳</span><span class="spark spark-b">+</span>
+        </div>
+        <h2 id="upload-title">여기에 GIF 파일을 놓으세요</h2>
+        <p id="upload-help">편집할 GIF 파일 1개를 드래그하거나 선택하세요.</p>
+        <input id="file-input" type="file" accept="image/gif,.gif" hidden>
+        <button id="choose-file" type="button" class="primary"><svg class="ico"><use href="#i-folder"/></svg>파일 선택</button>
+      </div>
+      <button id="try-sample" class="sample" type="button">
+        <span class="sample-glyph" aria-hidden="true"><svg class="ico"><use href="#i-play"/></svg></span>
+        <span>샘플 GIF로 둘러보기</span>
+        <svg class="ico sample-arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </button>
+    </section>
+    <section id="workspace" hidden aria-label="GIF 작업 공간">
+      <div class="work-heading"><h1>작업 공간</h1><button id="new-file" type="button" class="secondary"><svg class="ico"><use href="#i-plus"/></svg>새 작업</button></div>
+      <div class="work-layout">
+        <div class="previews">
+          <details id="original-panel" class="panel" open>
+            <summary><svg class="ico expander"><use href="#i-chevron"/></svg><span>Original GIF</span></summary>
+            <div id="original-preview" class="preview"></div>
+            <div id="original-meta" class="meta"></div>
+          </details>
+          <details id="result-panel" class="panel" open hidden>
+            <summary><svg class="ico expander"><use href="#i-chevron"/></svg><span id="result-title">편집 결과</span></summary>
+            <div id="result-preview" class="preview"></div>
+            <div id="result-meta" class="meta"></div>
+            <div class="result-actions">
+              <button id="download-result" class="primary" type="button"><svg class="ico"><use href="#i-download"/></svg>다운로드</button>
+              <button id="save-result" class="secondary" type="button"><svg class="ico"><use href="#i-save"/></svg>다른 이름으로 저장</button>
+            </div>
+          </details>
+        </div>
+        <aside class="panel tools" aria-labelledby="tool-title">
+          <h2 id="tool-title">Editor Tools</h2>
+          <div id="tool-grid" class="tool-grid"></div>
+          <div id="tool-panel"></div>
+          <div id="generator-settings" hidden></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script src="vendor/gif-libs.js"></script>
+  <script src="codec.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
